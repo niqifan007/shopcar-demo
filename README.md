@@ -1,5 +1,5 @@
 # shopcar-demo
-
+淘宝购物车案例 vue生命周期
 ## Project setup
 ```
 yarn install

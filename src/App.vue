@@ -1,28 +1,51 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <MyHeader title="购物车案例"></MyHeader>
+    <div class="main">
+      <MyGoods v-for="obj in list" :key="obj.id" :gObj="obj"></MyGoods>
+    </div>
+    <MyFooter @changeAll="allFn" :arr="list"></MyFooter>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// 项目初始化
+import MyHeader from "./components/MyHeader.vue";
+import MyFooter from "./components/MyFooter.vue";
+import MyGoods from "./components/MyGoods.vue";
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+    MyHeader,
+    MyFooter,
+    MyGoods,
+  },
+  data() {
+    return {
+      list: [], // 商品所有数据
+    };
+  },
+  created() {
+    // 不必在自己引入axios变量, 而是直接使用全局属性$axios
+    this.$axios({
+      url: "/api/cart",
+    }).then((res) => {
+      console.log(res);
+      this.list = res.data.list;
+    });
+  },
+  methods: {
+    allFn(bool) {
+      this.list.forEach((obj) => (obj.goods_state = bool));
+      // 把MyFooter内的全选状态true/false同步给所有小选框的关联属性上
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.main {
+  padding-top: 45px;
+  padding-bottom: 50px;
 }
 </style>
